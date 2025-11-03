@@ -5,3 +5,4 @@ node_modules/
 .env.production.env
 deploy_backend/.env
 dist/
+backend_project/.env
