@@ -1,0 +1,2 @@
+const asyncHandler = () => {};
+export { asyncHandler };
