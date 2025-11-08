@@ -15,9 +15,9 @@ const uploadOnCloudinary = async (localFilePath) => {
       resource_type: "auto",
     })
     .catch((error) => {
-      console.log(error);
-      fs.unlinkSync(localFilePath); //remove the locally saved temporary file as the upload operation got failed
-    });
+      console.log(error); //remove the locally saved temporary file as the upload operation got failed
+    })
+    .finally(() => fs.unlinkSync(localFilePath));
 
   console.log(uploadResult);
 };
@@ -40,6 +40,5 @@ console.log(optimizeUrl); */
 });
 
 console.log(autoCropUrl); */
-
 
 export { uploadOnCloudinary };
