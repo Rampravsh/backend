@@ -10,16 +10,17 @@ cloudinary.config({
 
 // Upload an image
 const uploadOnCloudinary = async (localFilePath) => {
-  const uploadResult = await cloudinary.uploader
-    .upload(localFilePath, {
+  try {
+    if (!localFilePath) return null;
+    const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
-    })
-    .catch((error) => {
-      console.log(error); //remove the locally saved temporary file as the upload operation got failed
-    })
-    .finally(() => fs.unlinkSync(localFilePath));
-
-  console.log(uploadResult);
+    });
+    console.log("file is uploaded on cloudinary", response.url);
+    return response;
+  } catch (error) {
+    fs.unlinkSync(localFilePath);
+    return null;
+  }
 };
 
 //🚧🚧🚧🚧 for the future use 🚧🚧🚧🚧🚧
@@ -27,7 +28,7 @@ const uploadOnCloudinary = async (localFilePath) => {
 /* const optimizeUrl = cloudinary.url("shoes", {
   fetch_format: "auto",
   quality: "auto",
-});
+  });
 
 console.log(optimizeUrl); */
 
