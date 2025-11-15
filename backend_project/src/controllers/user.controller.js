@@ -168,4 +168,36 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, null, "User logged out successfully"));
 });
 
-export { registerUser, loginUser, logoutUser };
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
+  // console.log(refreshToken);
+
+  if (!refreshToken) {
+    throw new ApiError(401, "refresh token not found, login again");
+  }
+
+  const user = await User.findOne({ refreshToken });
+  if (!user) {
+    throw new ApiError(401, "invalid refresh token, login again");
+  }
+  const newAccessToken = await user.generateAccessToken();
+  const newRefreshToken = await user.generateRefreshToken();
+
+  const options = {
+    httpOnly: true,
+    // secure: true,
+  };
+  return res
+    .status(200)
+    .cookie("refreshToken", newRefreshToken, options)
+    .cookie("accessToken", newAccessToken, options)
+    .json(
+      new ApiResponse(
+        200,
+        { accessToken: newAccessToken },
+        "Access token refreshed successfully"
+      )
+    );
+});
+
+export { registerUser, loginUser, logoutUser, refreshAccessToken };
