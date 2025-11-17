@@ -5,7 +5,10 @@ const { Schema, model } = mongoose;
 
 const commentSchema = new Schema(
   {
-    content: { type: String, required: true },
+    content: {
+      type: String,
+      required: true,
+    },
     video: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Video",
