@@ -5,6 +5,8 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
+//getVideoCommints controller
+
 const getVideoComments = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   const { page = 1, limit = 10 } = req.query;
@@ -73,6 +75,8 @@ const getVideoComments = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, comments, "Comments fetched successfully"));
 });
 
+//addComment controller
+
 const addComment = asyncHandler(async (req, res) => {
   const { content } = req.body;
   const { videoId } = req.params;
@@ -103,6 +107,8 @@ const addComment = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(201, comment, "Comment added  successfully "));
 });
+
+//updateComment controller
 
 const updateComment = asyncHandler(async (req, res) => {
   const { commentId } = req.params;
@@ -144,6 +150,8 @@ const updateComment = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, updatedComment, "Comment updated successfully"));
 });
+
+//deleteComment controller
 
 const deleteComment = asyncHandler(async (req, res) => {
   const { commentId } = req.params;
