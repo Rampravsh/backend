@@ -1,4 +1,4 @@
-import mongoose, { connect } from "mongoose";
+import mongoose from "mongoose";
 import { Comment } from "../models/comment.model.js";
 import { Video } from "../models/video.model.js";
 import { ApiError } from "../utils/ApiError.js";
@@ -64,7 +64,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
 
   const comments = await Comment.aggregatePaginate(commentAggregate, options);
 
-  if (!comment || comments.docs.length === 0) {
+  if (!comments || comments.docs.length === 0) {
     return res
       .status(200)
       .json(new ApiResponse(200, [], "No comments found for this video"));
