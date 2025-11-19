@@ -6,3 +6,4 @@ node_modules/
 deploy_backend/.env
 dist/
 backend_project/.env
+backend_project/.vscode/settings.json
