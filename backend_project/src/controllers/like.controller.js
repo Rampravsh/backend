@@ -123,6 +123,67 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
   }
 });
 
-const getLikedVideos = asyncHandler(async (req, res) => {});
+const getLikedVideos = asyncHandler(async (req, res) => {
+  const likedVideos = await Like.aggregate([
+    {
+      $match: {
+        likedBy: req.user?._id,
+        video: { $exists: true },
+      },
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "video",
+        foreignField: "_id",
+        as: "videoDetails",
+        pipeline: [
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "ownerDetails",
+              pipeline: [
+                {
+                  $project: {
+                    fullName: 1,
+                    avatar: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $unwind: "$ownerDetails",
+          },
+          {
+            $project: {
+              videoFile: 1,
+              title: 1,
+              thumbnail: 1,
+              description: 1,
+              duration: 1,
+              owner: 1,
+              ownerDetails: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unwind: "$videoDetails",
+    },
+    {
+      $replaceRoot: { newRoot: "$videoDetails" },
+    },
+  ]);
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, likedVideos, "Liked videos fetched successfully")
+    );
+});
 
 export { toggleCommentLike, toggleTweetLike, toggleVideoLike, getLikedVideos };
